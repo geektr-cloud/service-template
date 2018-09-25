@@ -106,9 +106,9 @@ example::backup-data() {
 
 # initialize data directory
 example::init-data() {
-  docker run --rm -it -v "$data_dir:/data" alpine:3.8 chown -R "$UID:$GID" /data
   # if data dir already exist, backup it and then remove
   if [ -d "$data_dir" ]; then
+    docker run --rm -it -v "$data_dir:/data" alpine:3.8 chown -R "$UID:$GID" /data
     example::backup-data
     echo "$data_dir will be removed, you can find the backup in $backups_dir"
   fi
