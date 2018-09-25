@@ -1,0 +1,29 @@
+version: '3'
+services:
+  nginx:
+    image: nginx
+    restart: always
+    volumes:
+      - "$service_dir/conf/nginx/nginx.conf:/etc/nginx/nginx.conf:ro"
+      - "$data_dir/sites:/sites:ro"
+      - "$data_dir/vhosts:/vhosts:ro"
+      - "$data_dir/logs:/logs:rw"
+    ports:
+      - "80:80"
+      - "443:443"
+  ftp:
+      image: stilliard/pure-ftpd
+      restart: always
+      env_file:
+        - "$service_dir/conf/ftp/ftp.env"
+        - "$secrets_dir/ftp/ftp.env"
+      volumes:
+        - "$service_dir/conf/ftp/working_dir:/working_dir:rw"
+        - "$data_dir/ftp/db:/etc/pure-ftpd/db:rw"
+        - "$data_dir/ftp/log:/log:rw"
+        - "$data_dir/sites:/home/ftpusers/sites:rw"
+        - "$data_dir/vhosts:/home/ftpusers/vhosts:rw"
+      ports:
+        - "21:21"
+        - "50000-50009:50000-50009"
+      working_dir: /working_dir
